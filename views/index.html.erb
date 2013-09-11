@@ -19,7 +19,7 @@
     </article>
     <article>
       <p>
-        Parsed VCAP_SERVICES: <%= MultiJson.load(ENV["VCAP_SERVICES"]).inspect %>
+        Parsed VCAP_SERVICES: <%= MultiJson.load(ENV.fetch("VCAP_SERVICES", "{}")).inspect %>
       </p>
     </article>
   </body>
