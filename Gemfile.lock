@@ -69,6 +69,7 @@ GEM
     tilt (1.4.1)
     tzinfo (0.3.37)
     uuidtools (2.1.4)
+    yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
@@ -76,6 +77,8 @@ PLATFORMS
 DEPENDENCIES
   cf (~> 5.3.0)
   erubis
+  multi_json
   puma
   sinatra
   sinatra-contrib
+  yajl-ruby

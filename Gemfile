@@ -6,6 +6,8 @@ gem "sinatra"
 gem "puma"
 gem "sinatra-contrib"
 gem "erubis"
+gem "multi_json"
+gem "yajl-ruby"
 
 group :development do
   gem "cf", "~> 5.3.0"
