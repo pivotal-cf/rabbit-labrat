@@ -1,4 +1,5 @@
 require "sinatra/base"
+require "multi_json"
 
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
