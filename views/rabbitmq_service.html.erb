@@ -17,6 +17,7 @@
       <p>
         RabbitMQ service healthy?: <%= healthy %>
       </p>
+      <% if connection %>
       <table>
         <thead>
           <tr>
@@ -48,6 +49,7 @@
           </tr>
         </tbody>
       </table>
+      <% end %>
     </article>
   </body>
 </html>
