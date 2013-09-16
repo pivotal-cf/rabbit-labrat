@@ -21,17 +21,23 @@ class LabRat < Sinatra::Base
       svs  = MultiJson.load(ENV["VCAP_SERVICES"])
       uri  = svs["rabbitmq-1.0"].first["credentials"]["uri"]
       conn = Bunny.new(uri)
-      conn.start
+      begin
+        conn.start
 
-      ch   = conn.create_channel
-      q    = ch.queue("", :exclusive => true)
+        ch   = conn.create_channel
+        q    = ch.queue("", :exclusive => true)
 
-      erb :rabbitmq_service, :locals => {
-        :healthy    => true,
-        :connection => conn,
-        :channel    => ch,
-        :queue      => q
-      }
+        erb :rabbitmq_service, :locals => {
+          :healthy    => true,
+          :connection => conn,
+          :channel    => ch,
+          :queue      => q
+        }
+      rescue Bunny::PossibleAuthenticationFailureError => e
+        erb :rabbitmq_service, :locals => {
+          :healthy => false
+        }
+      end
     else
       erb :rabbitmq_service, :locals => {
         :healthy => false
