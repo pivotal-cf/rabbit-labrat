@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title>
+      Service information
+    </title>
+  </head>
+
+  <body>
+    <article>
+      <p>
+        Parsed VCAP_SERVICES: <%= MultiJson.load(ENV.fetch("VCAP_SERVICES", "{}")).inspect %>
+      </p>
+    </article>
+
+    <article>
+      <p>
+        RabbitMQ service healthy?: <%= healthy %>
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <td>Key</td>
+            <td>Value</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Connection Details</td>
+            <td><%= "#{connection.user}@#{connection.host}:#{connection.port}, vhost=#{connection.vhost}" %></td>
+          </tr>
+          <tr>
+            <td>(Server-generated) queue name</td>
+            <td><%= queue.name %></td>
+          </tr>
+          <tr>
+            <td>Server properties</td>
+            <td>
+              <table>
+                <% connection.server_properties.each do |k, v| %>
+                <tr>
+                  <td><%= k %></td>
+                  <td><%= v.inspect %></td>
+                </tr>
+                <% end %>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </body>
+</html>
