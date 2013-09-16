@@ -10,7 +10,7 @@ It is not useful more than as an example.
 ## How to Run It
 
     bundle install
-    bundle exec puma --config puma.rb
+    bundle exec puma
 
 ## How to Deploy
 
