@@ -1,7 +1,10 @@
 # What is Lab Rat
 
 This is an example CloudFoundry app that used to inspect
-values of environment variables in a Warden container.
+values of environment variables available (e.g. `VCAP_SERVICES`)
+and can be used to validate service health.
+
+It is not useful more than as an example.
 
 
 ## How to Run It
