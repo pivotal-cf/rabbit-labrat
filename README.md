@@ -7,7 +7,7 @@ values of environment variables in a Warden container.
 ## How to Run It
 
     bundle install
-    bundle exec puma
+    bundle exec puma --config puma.rb
 
 ## How to Deploy
 
