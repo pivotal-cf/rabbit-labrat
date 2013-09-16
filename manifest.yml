@@ -1,4 +1,4 @@
 ---
 applications:
   - name: lab-rat
-    command: puma --config puma.rb
+    command: puma
