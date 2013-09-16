@@ -35,7 +35,8 @@ class LabRat < Sinatra::Base
         }
       rescue Bunny::PossibleAuthenticationFailureError => e
         erb :rabbitmq_service, :locals => {
-          :healthy => false
+          :healthy    => false,
+          :connection => nil
         }
       end
     else
