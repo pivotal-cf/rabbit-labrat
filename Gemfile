@@ -8,7 +8,7 @@ gem "sinatra-contrib"
 gem "erubis"
 gem "multi_json"
 gem "yajl-ruby"
-gem "bunny", ">= 0.10.7"
+gem "bunny", ">= 0.10.8"
 
 group :development do
   gem "cf", "~> 5.3.0"
