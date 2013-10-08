@@ -20,7 +20,7 @@ class LabRat < Sinatra::Base
     if ENV["VCAP_SERVICES"]
       svs  = MultiJson.load(ENV["VCAP_SERVICES"])
       uri  = svs["rabbitmq-1.0"].first["credentials"]["uri"]
-      conn = Bunny.new(uri)
+      conn = Bunny.new(uri, :verify_peer => false)
       begin
         conn.start
 
