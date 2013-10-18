@@ -7,49 +7,53 @@
   </head>
 
   <body>
-    <article>
-      <p>
-        Parsed VCAP_SERVICES: <%= MultiJson.load(ENV.fetch("VCAP_SERVICES", "{}")).inspect %>
-      </p>
-    </article>
+    <% results.each do |r| %>
+    <%
+       uri  = r[:uri]
+       conn = r[:connection]
+       q    = r[:queue]
+     %>
 
     <article>
-      <p>
-        RabbitMQ service healthy?: <%= healthy %>
-      </p>
-      <% if connection %>
-      <table>
-        <thead>
-          <tr>
-            <td>Key</td>
-            <td>Value</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Connection Details</td>
-            <td><%= "#{connection.user}@#{connection.host}:#{connection.port}, vhost=#{connection.vhost}" %></td>
-          </tr>
-          <tr>
-            <td>(Server-generated) queue name</td>
-            <td><%= queue.name %></td>
-          </tr>
-          <tr>
-            <td>Server properties</td>
-            <td>
-              <table>
-                <% connection.server_properties.each do |k, v| %>
-                <tr>
-                  <td><%= k %></td>
-                  <td><%= v.inspect %></td>
-                </tr>
-                <% end %>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <% if e = r[:exception] %>
+      <div class="error">
+        Connection <%= uri %> raised an exception:
+        <p>
+          <%= e.message %>
+        </p>
+      </div>
+      <% else %>
+      <h2>Connection <%= uri %></h2>
+      <dl>
+        <dt>Uses TLS?</dt>
+        <dd><%= r[:tls] %></dd>        
+
+        <dt>Server-generated queue name</dt>
+        <dd><%= q.name %></dd>
+
+        <dt>Message payload (consumed via basic.get)</dt>
+        <dd><%= r[:consumed_message_payload] %></dd>
+
+        <dt>HTTP API plugin version</dt>
+        <dd><%= r[:management_plugin_version] %></dd>
+
+        <dt>Total connections</dt>
+        <dd><%= r[:object_totals]["connections"] %></dd>
+
+        <dt>Total channels</dt>
+        <dd><%= r[:object_totals]["channels"] %></dd>
+
+        <dt>Exchanges/Queues totals</dt>
+        <dd><%= r[:object_totals].inspect %></dd>
+
+        <dt>Erlang version</dt>
+        <dd><%= r[:full_erlang_version] %></dd>
+
+        <dt>Statistics DB node</dt>
+        <dd><%= r[:statistics_db_node] %></dd>
+      </dl>
       <% end %>
     </article>
+    <% end %>
   </body>
 </html>
