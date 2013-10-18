@@ -1,0 +1,26 @@
+{
+  "rabbitmq-1.0": [
+    {
+      "name": "rabbit1",
+      "label": "rabbitmq",
+      "provider": "megacorp",
+      "tags": ["amqp", "rabbitmq"],
+      "plan": "free",
+      "credentials": {
+        "uri":          "amqp://guest:guest@127.0.0.1/labrat",
+        "http_api_uri": "http://guest:guest@127.0.0.1:15672/api"
+      }
+    },
+      {
+      "name": "rabbit1",
+      "label": "rabbitmq",
+      "provider": "megacorp",
+      "tags": ["amqp", "rabbitmq"],
+      "plan": "free",
+      "credentials": {
+        "uri":          "amqp://guest:guest@127.0.0.1/labrat",
+        "http_api_uri": "http://guest:guest@127.0.0.1:15672/api"
+      }
+    }
+  ]
+}
