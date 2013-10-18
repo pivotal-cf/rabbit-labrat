@@ -66,6 +66,8 @@ class LabRat < Sinatra::Base
 
         MultiJson.dump(results.to_json)
       rescue Exception => e
+        status 500
+
         MultiJson.dump({:exception => e.message})
       end
     end
