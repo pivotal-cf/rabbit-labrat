@@ -52,19 +52,22 @@ class LabRat < Sinatra::Base
 
   get "/services/rabbitmq.json" do
     if ENV["VCAP_SERVICES"]
-      hc      = HealthChecker.new
-      results = creds.
-        map { |c| hc.check(c) }.
-        map do |h|
-        # modify objects that cannot be serialized to JSON
-        h[:connection] = "connected"
-        h[:queue] = h[:queue].name
+      begin
+        hc      = HealthChecker.new
+        results = creds.
+          map { |c| hc.check(c) }.
+          map do |h|
+          # modify objects that cannot be serialized to JSON
+          h[:connection] = "connected"
+          h[:queue] = h[:queue].name
 
-        h
+          h
         end
 
-
-      MultiJson.dump(results.to_json)
+        MultiJson.dump(results.to_json)
+      rescue Exception => e
+        MultiJson.dump({:exception => e.message})
+      end
     end
   end
 end
