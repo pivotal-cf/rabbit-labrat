@@ -2,6 +2,11 @@ require "sinatra/base"
 require "multi_json"
 require "bunny"
 
+# For development
+if File.exists?("vcap_services.json") && File.readable?("vcap_services.json")
+  ENV["VCAP_SERVICES"] = MultiJson.dump(MultiJson.load(File.read("vcap_services.json")))
+end
+
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class LabRat < Sinatra::Base
