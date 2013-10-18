@@ -57,7 +57,7 @@ class LabRat < Sinatra::Base
         map { |c| hc.check(c) }.
         map do |h|
         # modify objects that cannot be serialized to JSON
-        h[:connection] = nil
+        h[:connection] = "connected"
         h[:queue] = h[:queue].name
 
         h
