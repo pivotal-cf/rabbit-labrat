@@ -41,7 +41,7 @@ class LabRat
           :object_totals             => overview.object_totals.to_hash,
           :consumed_message_payload  => payload
         }
-      rescue Bunny::PossibleAuthenticationFailureError => e
+      rescue Exception => e
         {
           :uri       => credentials["uri"],
           :exception => e
