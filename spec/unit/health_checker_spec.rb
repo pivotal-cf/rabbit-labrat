@@ -24,4 +24,20 @@ describe LabRat::HealthChecker do
       m[:connection].close
     end
   end
+
+
+  context "with invalid credentials" do
+    let(:credentials) do
+      {
+        "uri"          => "amqp://guest:guest@128.99.0.1",
+        "http_api_uri" => "http://guest:guest@128.76.0.1:15678/api"
+      }
+    end
+
+    it "returns check results with :exception" do
+      m = subject.check(credentials)
+
+      m[:exception].should_not be_nil
+    end
+  end
 end
