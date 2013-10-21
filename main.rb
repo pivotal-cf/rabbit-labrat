@@ -44,6 +44,10 @@ class LabRat < Sinatra::Base
       hc      = HealthChecker.new
       results = creds.map { |c| hc.check(c) }
 
+      if results.any? { |m| !!m[:exception] }
+        status 500
+      end
+
       erb :rabbitmq_service, :locals => {
         :results => results
       }
@@ -62,6 +66,10 @@ class LabRat < Sinatra::Base
           h[:queue] = h[:queue].name
 
           h
+        end
+
+        if results.any? { |m| !!m[:exception] }
+          status 500
         end
 
         MultiJson.dump(results.to_json)
