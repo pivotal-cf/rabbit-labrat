@@ -25,7 +25,7 @@ class LabRat < Sinatra::Base
       MultiJson.load(ENV["VCAP_SERVICES"])
     end
 
-    def rabbitmq_service
+    def rabbitmq_services
       svs.values.reduce([]) do |acc, instances|
         xs = instances.select do |m|
           m["label"] =~ /^rabbitmq/i || (m["tags"] && m["tags"].include?("rabbitmq"))
@@ -36,7 +36,7 @@ class LabRat < Sinatra::Base
     end
 
     def creds
-      creds = rabbitmq_service.
+      creds = rabbitmq_services.
         map { |h| h["credentials"] }
     end
   end
