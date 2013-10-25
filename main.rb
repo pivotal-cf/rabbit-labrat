@@ -26,8 +26,16 @@ class LabRat < Sinatra::Base
     end
 
     def creds
-      creds = svs["rabbitmq-1.0"].
-        map { |h| h["credentials"] }
+      creds = []
+      svs.each do |key, values|
+        values.each do |value|
+          tags = value["tags"]
+          if tags && tags.member?("rabbitmq")
+            creds.push(value["credentials"])
+          end
+        end
+      end
+      creds
     end
   end
 
