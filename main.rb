@@ -28,7 +28,7 @@ class LabRat < Sinatra::Base
     def rabbitmq_services
       svs.values.reduce([]) do |acc, instances|
         xs = instances.select do |m|
-          m["label"] =~ /^rabbitmq/i || (m["tags"] && m["tags"].include?("rabbitmq"))
+          m["label"] =~ /rabbitmq/i || (m["tags"] && m["tags"].include?("rabbitmq"))
         end
 
         acc + xs
