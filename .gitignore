@@ -2,3 +2,5 @@ tmp/*
 *#
 *~
 vcap_services.json
+bin/
+.bundle/*
