@@ -61,6 +61,9 @@ class LabRat < Sinatra::Base
       erb :rabbitmq_service, :locals => {
         :results => results
       }
+    else
+      status 500
+      "VCAP_SERVICES is not set"
     end
   end
 
@@ -88,6 +91,9 @@ class LabRat < Sinatra::Base
 
         MultiJson.dump({:exception => e.message})
       end
+    else
+      status 500
+      "VCAP_SERVICES is not set"
     end
   end
 end
