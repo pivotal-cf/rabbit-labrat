@@ -76,7 +76,7 @@ class LabRat < Sinatra::Base
           map do |h|
           # modify objects that cannot be serialized to JSON
           h[:connection] = "connected"
-          h[:queue] = h[:queue].name
+          h[:queue] = h[:queue].name if h[:queue]
 
           h
         end
@@ -89,7 +89,7 @@ class LabRat < Sinatra::Base
       rescue Exception => e
         status 500
 
-        MultiJson.dump({:exception => e.message})
+        MultiJson.dump({:exception => "#{e.class.name}: #{e.message} (#{e.backtrace.first})"})
       end
     else
       status 500
