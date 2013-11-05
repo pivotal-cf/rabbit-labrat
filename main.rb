@@ -54,7 +54,7 @@ class LabRat < Sinatra::Base
       hc      = HealthChecker.new
       results = creds.map { |c| hc.check(c) }
 
-      if results.any? { |m| !!m[:exception] }
+      if results.empty? || results.any? { |m| !!m[:exception] }
         status 500
       end
 
@@ -81,11 +81,11 @@ class LabRat < Sinatra::Base
           h
         end
 
-        if results.any? { |m| !!m[:exception] }
+        if results.empty? || results.any? { |m| !!m[:exception] }
           status 500
         end
 
-        MultiJson.dump(results.to_json)
+        MultiJson.dump(results)
       rescue Exception => e
         status 500
 
