@@ -50,7 +50,7 @@ class LabRat < Sinatra::Base
   end
 
   get "/services/rabbitmq" do
-    if ENV["VCAP_SERVICES"]
+    if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       hc      = HealthChecker.new
       results = creds.map { |c| hc.check(c) }
 
@@ -63,12 +63,12 @@ class LabRat < Sinatra::Base
       }
     else
       status 500
-      "VCAP_SERVICES is not set"
+      "VCAP_SERVICES is not set or blank"
     end
   end
 
   get "/services/rabbitmq.json" do
-    if ENV["VCAP_SERVICES"]
+    if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       begin
         hc      = HealthChecker.new
         results = creds.
@@ -93,7 +93,7 @@ class LabRat < Sinatra::Base
       end
     else
       status 500
-      "VCAP_SERVICES is not set"
+      "VCAP_SERVICES is not set or blank"
     end
   end
 end
