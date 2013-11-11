@@ -15,7 +15,7 @@ end
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class LabRat < Sinatra::Base
-  require "lab_rat/health_checker"
+  require "lab_rat/aggregate_health_checker"
   require 'sinatra/reloader' if development?
 
   configure do
@@ -38,9 +38,20 @@ class LabRat < Sinatra::Base
       end
     end
 
-    def creds
-      creds = rabbitmq_services.
-        map { |h| h["credentials"] }
+    def conns
+      xs = rabbitmq_services.
+        map { |h| h["credentials"] }.
+        map do |creds|
+          if creds["protocols"]
+            puts "Provided multiple protocols: #{creds["protocols"].keys}"
+            creds["protocols"]
+          else
+            {"amqp"       => {"uri" => creds["uri"]},
+             "management" => {"uri" => creds["http_api_uri"]}}
+          end
+        end
+
+      xs
     end
   end
 
@@ -54,13 +65,16 @@ class LabRat < Sinatra::Base
 
   get "/services/rabbitmq" do
     if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
-      hc      = HealthChecker.new
-      results = creds.map { |c| hc.check(c) }
+      hc      = AggregateHealthChecker.new
+      results = conns.map { |c| hc.check(c) }.reduce([]) do |acc, group|
+        acc + group
+      end
 
       if results.empty? || results.any? { |m| !!m[:exception] }
         status 500
       end
 
+      puts results.inspect
       erb :rabbitmq_service, :locals => {
         :results => results
       }
@@ -73,8 +87,8 @@ class LabRat < Sinatra::Base
   get "/services/rabbitmq.json" do
     if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       begin
-        hc      = HealthChecker.new
-        results = creds.
+        hc      = AggregateHealthChecker.new
+        results = conns.
           map { |c| hc.check(c) }.
           map do |h|
           # modify objects that cannot be serialized to JSON
