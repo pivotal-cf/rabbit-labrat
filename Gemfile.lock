@@ -51,6 +51,7 @@ GEM
     mime-types (1.25)
     minitest (4.7.5)
     mothership (0.5.1)
+    mqtt (0.1.0)
     multi_json (1.7.9)
     multipart-post (1.2.0)
     puma (2.5.1)
@@ -105,6 +106,7 @@ DEPENDENCIES
   effin_utf8
   erubis
   faraday
+  mqtt (~> 0.1.0)
   multi_json
   puma
   rabbitmq_http_api_client (>= 0.7.0)

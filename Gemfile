@@ -10,6 +10,7 @@ gem "multi_json"
 gem "yajl-ruby"
 
 gem "bunny", "~> 1.0.0"
+gem "mqtt",  "~> 0.1.0"
 gem "rabbitmq_http_api_client", ">= 0.7.0"
 
 gem "effin_utf8"
