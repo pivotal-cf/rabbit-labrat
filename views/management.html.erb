@@ -1,0 +1,22 @@
+<dl>
+  <dt>Uses TLS?</dt>
+  <dd><%= r[:tls] %></dd>        
+
+  <dt>HTTP API plugin version</dt>
+  <dd><%= r[:management_plugin_version] %></dd>
+
+  <dt>Total connections</dt>
+  <dd><%= r[:object_totals]["connections"] %></dd>
+
+  <dt>Total channels</dt>
+  <dd><%= r[:object_totals]["channels"] %></dd>
+
+  <dt>Exchanges/Queues totals</dt>
+  <dd><%= r[:object_totals].inspect %></dd>
+
+  <dt>Erlang version</dt>
+  <dd><%= r[:full_erlang_version] %></dd>
+
+  <dt>Statistics DB node</dt>
+  <dd><%= r[:statistics_db_node] %></dd>
+</dl>

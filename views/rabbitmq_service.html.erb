@@ -8,12 +8,6 @@
 
   <body>
     <% results.each do |r| %>
-    <%
-       uri  = r[:uri]
-       conn = r[:connection]
-       q    = r[:queue]
-     %>
-
     <article>
       <% if e = r[:exception] %>
       <div class="error">
@@ -23,35 +17,7 @@
         </p>
       </div>
       <% else %>
-      <h2>Connection <%= uri %></h2>
-      <dl>
-        <dt>Uses TLS?</dt>
-        <dd><%= r[:tls] %></dd>        
-
-        <dt>Server-generated queue name</dt>
-        <dd><%= q.name %></dd>
-
-        <dt>Message payload (consumed via basic.get)</dt>
-        <dd><%= r[:consumed_message_payload] %></dd>
-
-        <dt>HTTP API plugin version</dt>
-        <dd><%= r[:management_plugin_version] %></dd>
-
-        <dt>Total connections</dt>
-        <dd><%= r[:object_totals]["connections"] %></dd>
-
-        <dt>Total channels</dt>
-        <dd><%= r[:object_totals]["channels"] %></dd>
-
-        <dt>Exchanges/Queues totals</dt>
-        <dd><%= r[:object_totals].inspect %></dd>
-
-        <dt>Erlang version</dt>
-        <dd><%= r[:full_erlang_version] %></dd>
-
-        <dt>Statistics DB node</dt>
-        <dd><%= r[:statistics_db_node] %></dd>
-      </dl>
+      <%= erb r[:proto].to_s, :layout => false %>
       <% end %>
     </article>
     <% end %>
