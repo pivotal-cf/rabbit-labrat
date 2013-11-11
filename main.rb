@@ -2,6 +2,9 @@ require "sinatra/base"
 require "multi_json"
 require "bunny"
 
+require "mqtt"
+require "stomp"
+
 $LOAD_PATH << "./lib"
 
 # For development
