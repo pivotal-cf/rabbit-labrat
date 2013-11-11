@@ -8,8 +8,10 @@ gem "sinatra-contrib"
 gem "erubis"
 gem "multi_json"
 gem "yajl-ruby"
-gem "bunny", ">= 0.10.8"
+
+gem "bunny", "~> 1.0.0"
 gem "rabbitmq_http_api_client", ">= 0.7.0"
+
 gem "effin_utf8"
 gem "rake"
 
