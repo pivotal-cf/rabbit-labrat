@@ -46,7 +46,7 @@ class LabRat
         }
       rescue Exception => e
         {
-          :proto     => :stomp,
+          :proto     => :amqp,
           :uri       => proto["uri"],
           :exception => e
         }
@@ -65,6 +65,7 @@ class LabRat
                         {}
                       end
         http_client = RabbitMQ::HTTP::Client.new(proto["uri"], opts)
+        puts proto.inspect
         overview    = http_client.overview
 
         {
@@ -76,7 +77,7 @@ class LabRat
         }
       rescue Exception => e
         {
-          :proto     => :stomp,
+          :proto     => :management,
           :uri       => proto["uri"],
           :exception => e
         }
@@ -84,11 +85,46 @@ class LabRat
     end
 
     def check_mqtt(proto)
-      {:proto => :mqtt,  :uri => proto["uri"]}
+      begin
+        u   = URI.parse(proto["uri"])
+        c   = MQTT::Client.connect(u.host)
+        msg = "mqtt #{SecureRandom.hex}"
+        c.publish("mqtt-test", msg)
+
+        {
+          :proto      => :mqtt,
+          :uri        => proto["uri"],
+          :connection => c,
+          :payload    => msg
+        }
+      rescue Exception => e
+        {
+          :proto     => :mqtt,
+          :uri       => proto["uri"],
+          :exception => e
+        }
+      end
     end
 
     def check_stomp(proto)
-      {:proto => :stomp, :uri => proto["uri"]}
+      begin
+        c   = Stomp::Client.new(proto["uri"])
+        msg = "stomp #{SecureRandom.hex}"
+        c.publish("stomp-test", msg)
+
+        {
+          :connection => c,
+          :proto      => :stomp,
+          :uri        => proto["uri"],
+          :payload    => msg
+        }
+      rescue Exception => e
+        {
+          :proto     => :stomp,
+          :uri       => proto["uri"],
+          :exception => e
+        }
+      end
     end
 
   end

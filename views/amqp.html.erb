@@ -1,4 +1,4 @@
-<h3>AMQP connection <= result[:uri] %></h3>
+<h3>AMQP connection <%= result[:uri] %></h3>
 <dl>
   <dt>Uses TLS?</dt>
   <dd><%= result[:tls] %></dd>        
@@ -6,6 +6,6 @@
   <dt>Server-generated queue name</dt>
   <dd><%= result[:queue].name %></dd>
 
-  <dt>Message payload (consumed via basic.get)</dt>
+  <dt>Payload (published and consumed via basic.get)</dt>
   <dd><%= result[:consumed_message_payload] %></dd>
 </dl>

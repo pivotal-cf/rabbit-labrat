@@ -11,7 +11,8 @@
     <article>
       <% if e = r[:exception] %>
       <div class="error">
-        Connection <%= uri %> raised an exception:
+        <h3>Connection <%= r[:uri] %></h3>
+        raised an exception:
         <p>
           <%= e.message %>
         </p>
