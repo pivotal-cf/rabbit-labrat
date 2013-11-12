@@ -17,7 +17,9 @@
         </p>
       </div>
       <% else %>
-      <%= erb r[:proto].to_s, :layout => false %>
+        <div class="success">
+          <%= partial r[:proto], :result => r %>
+        </div>
       <% end %>
     </article>
     <% end %>
