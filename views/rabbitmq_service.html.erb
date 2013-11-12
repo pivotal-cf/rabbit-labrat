@@ -15,7 +15,7 @@
         raised an exception:
         <p>
           <%= e.message %>
-          <% e.backtrace.each do |line| %>
+          <% e.backtrace[0, 12].each do |line| %>
             <%= line %><br/>
           <% end %>
         </p>
