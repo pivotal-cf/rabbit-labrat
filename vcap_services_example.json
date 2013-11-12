@@ -4,22 +4,68 @@
       "name": "rabbit1",
       "label": "rabbitmq",
       "provider": "megacorp",
-      "tags": ["amqp", "rabbitmq"],
+      "tags": [
+        "amqp",
+        "rabbitmq"
+      ],
       "plan": "free",
       "credentials": {
-        "uri":          "amqp://guest:guest@127.0.0.1/labrat",
-        "http_api_uri": "http://guest:guest@127.0.0.1:15672/api"
+        "uri": "amqp:\/\/guest:guest@127.0.0.1\/labrat",
+        "http_api_uri": "http:\/\/guest:guest@127.0.0.1:15672\/api",
+        "protocols": {
+          "amqp": {
+            "uri": "amqp:\/\/guest:guest@127.0.0.1:5672",
+            "username": "guest",
+            "password": "guest",
+            "port": 5672,
+            "host": "127.0.0.1",
+            "vhost": "/"
+          },
+          "amqp+ssl": {
+            "uri": "amqps:\/\/guest:guest@127.0.0.1:5671",
+            "username": "guest",
+            "password": "guest",
+            "port": 5671,
+            "host": "127.0.0.1",
+            "vhost": "/"
+          },
+          "mqtt": {
+            "uri": "mqtt:\/\/guest:guest@127.0.0.1:1883",
+            "username": "guest",
+            "password": "guest",
+            "port": 1883,
+            "host": "127.0.0.1"
+          },
+          "stomp": {
+            "uri": "stomp:\/\/guest:guest@127.0.0.1:61613",
+            "username": "guest",
+            "password": "guest",
+            "port": 61613,
+            "host": "127.0.0.1",
+            "vhost": "/"
+          },
+          "management": {
+            "uri": "http:\/\/guest:guest@127.0.0.1:15672\/api\/",
+            "username": "guest",
+            "password": "guest",
+            "port": 15672,
+            "host": "127.0.0.1"
+          }
+        }
       }
     },
-      {
-      "name": "rabbit1",
+    {
+      "name": "rabbit2",
       "label": "rabbitmq",
       "provider": "megacorp",
-      "tags": ["amqp", "rabbitmq"],
+      "tags": [
+        "amqp",
+        "rabbitmq"
+      ],
       "plan": "free",
       "credentials": {
-        "uri":          "amqp://guest:guest@127.0.0.1/labrat",
-        "http_api_uri": "http://guest:guest@127.0.0.1:15672/api"
+        "uri": "amqps:\/\/guest:guest@127.0.0.1:5673\/labrat2",
+        "http_api_uri": "https:\/\/guest:guest@127.0.0.1:15673\/api"
       }
     }
   ]
