@@ -5,25 +5,26 @@ require "securerandom"
 class LabRat
   class AggregateHealthChecker
     def check(protos)
-      begin
-        amqp_status = check_amqp(protos)
-        http_status = check_management(protos)
+      protos.map do |m|
+        k = m[:proto]
 
-        [amqp_status, http_status].reduce([]) do |acc, m|
-          acc << m
+        case k
+        when "amqp", "amqp+ssl" then
+          check_amqp(m)
+        when "management", "management+ssl" then
+          check_management(m)
+        when "mqtt", "mqtt+ssl" then
+          check_mqtt(m)
+        when "stomp" then
+          check_stomp(m)
         end
-      rescue Exception => e
-        {
-          :uri       => protos["amqp"]["uri"],
-          :exception => e
-        }
       end
     end
 
 
-    def check_amqp(protos)
+    def check_amqp(proto)
       begin
-        conn = Bunny.new(protos["amqp"],
+        conn = Bunny.new(proto["uri"],
           :tls_cert            => "./tls/client_cert.pem",
           :tls_key             => "./tls/client_key.pem",
           :tls_ca_certificates => ["./tls/cacert.pem"])
@@ -37,7 +38,7 @@ class LabRat
 
         {
           :proto             => :amqp,
-          :uri               => protos["amqp"]["uri"],
+          :uri               => proto["uri"],
           :connection        => conn,
           :tls               => !!conn.uses_tls?,
           :queue             => q,
@@ -45,15 +46,16 @@ class LabRat
         }
       rescue Exception => e
         {
-          :uri       => protos["amqp"]["uri"],
+          :proto     => :stomp,
+          :uri       => proto["uri"],
           :exception => e
         }
       end
     end # check_amqp
 
-    def check_management(protos)
+    def check_management(proto)
       begin
-        http_uri    = URI.parse(protos["management"]["uri"])
+        http_uri    = URI.parse(proto["uri"])
         opts        = if http_uri.scheme == "https"
                         # since this is an example,
                         # it is reasonable for the client to not
@@ -62,7 +64,7 @@ class LabRat
                       else
                         {}
                       end
-        http_client = RabbitMQ::HTTP::Client.new(protos["management"]["uri"], opts)
+        http_client = RabbitMQ::HTTP::Client.new(proto["uri"], opts)
         overview    = http_client.overview
 
         {
@@ -74,10 +76,20 @@ class LabRat
         }
       rescue Exception => e
         {
-          :uri       => protos["management"]["uri"],
+          :proto     => :stomp,
+          :uri       => proto["uri"],
           :exception => e
         }
       end
     end
+
+    def check_mqtt(proto)
+      {:proto => :mqtt,  :uri => proto["uri"]}
+    end
+
+    def check_stomp(proto)
+      {:proto => :stomp, :uri => proto["uri"]}
+    end
+
   end
 end

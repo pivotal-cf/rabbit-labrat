@@ -41,17 +41,18 @@ class LabRat < Sinatra::Base
     def conns
       xs = rabbitmq_services.
         map { |h| h["credentials"] }.
-        map do |creds|
-          if creds["protocols"]
-            puts "Provided multiple protocols: #{creds["protocols"].keys}"
-            creds["protocols"]
-          else
-            {"amqp"       => {"uri" => creds["uri"]},
-             "management" => {"uri" => creds["http_api_uri"]}}
-          end
+        map do |creds| creds["protocols"] || {
+          "amqp"       => {"uri" => creds["uri"]},
+          "management" => {"uri" => creds["http_api_uri"]}
+        } end.reduce([]) do |acc, m|
+          acc + m.reduce([]) { |acc2, (k, v)| acc2 << (v.merge(:proto => k))}
         end
 
       xs
+    end
+
+    def partial(template, locals = {})
+      erb(template, :layout => false, :locals => locals)
     end
   end
 
@@ -66,17 +67,17 @@ class LabRat < Sinatra::Base
   get "/services/rabbitmq" do
     if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       hc      = AggregateHealthChecker.new
-      results = conns.map { |c| hc.check(c) }.reduce([]) do |acc, group|
-        acc + group
-      end
 
-      if results.empty? || results.any? { |m| !!m[:exception] }
+      puts "To check: #{conns.inspect}"
+      @results = hc.check(conns)
+      puts "Results: #{@results.inspect}"
+
+      if @results.empty? || @results.any? { |m| !!m[:exception] }
         status 500
       end
 
-      puts results.inspect
       erb :rabbitmq_service, :locals => {
-        :results => results
+        :results => @results
       }
     else
       status 500
