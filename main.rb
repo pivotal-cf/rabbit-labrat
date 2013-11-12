@@ -67,17 +67,14 @@ class LabRat < Sinatra::Base
   get "/services/rabbitmq" do
     if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       hc      = AggregateHealthChecker.new
+      results = hc.check(conns)
 
-      puts "To check: #{conns.inspect}"
-      @results = hc.check(conns)
-      puts "Results: #{@results.inspect}"
-
-      if @results.empty? || @results.any? { |m| !!m[:exception] }
+      if results.empty? || results.any? { |m| !!m[:exception] }
         status 500
       end
 
       erb :rabbitmq_service, :locals => {
-        :results => @results
+        :results => results
       }
     else
       status 500
