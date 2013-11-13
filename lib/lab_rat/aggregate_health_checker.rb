@@ -24,7 +24,7 @@ class LabRat
           #
           # check_mqtt(m)
           {:proto => :mqtt}
-        when "stomp" then
+        when "stomp", "stomp+ssl" then
           check_stomp(m)
         end
       end
@@ -123,6 +123,7 @@ class LabRat
     def check_stomp(proto)
       begin
         with_timeout do
+          raise RuntimeError, "shit"
           c   = Stomp::Client.new(proto["uri"])
           msg = "stomp #{SecureRandom.hex}"
           c.publish("stomp-test", msg)
