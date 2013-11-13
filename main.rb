@@ -87,8 +87,7 @@ class LabRat < Sinatra::Base
     if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       begin
         hc      = AggregateHealthChecker.new
-        results = conns.
-          map { |c| hc.check(c) }.
+        results = hc.check(conns).
           map do |h|
           # modify objects that cannot be serialized to JSON
           h[:connection] = "connected"
