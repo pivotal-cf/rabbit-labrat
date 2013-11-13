@@ -49,7 +49,8 @@ class LabRat < Sinatra::Base
           acc + m.reduce([]) { |acc2, (k, v)| acc2 << (v.merge(:proto => k))}
         end
 
-      xs
+      xs.compact.
+        sort_by { |m| m[:proto].to_s }
     end
 
     def partial(template, locals = {})
