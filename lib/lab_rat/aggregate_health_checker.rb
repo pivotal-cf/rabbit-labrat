@@ -10,7 +10,7 @@ class LabRat
 
     def check(protos)
       protos.map do |m|
-        k = m[:proto]
+        k = m[:proto] || m["proto"]
 
         case k
         when "amqp", "amqp+ssl" then
