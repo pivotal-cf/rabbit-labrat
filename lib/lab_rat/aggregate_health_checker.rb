@@ -18,7 +18,12 @@ class LabRat
         when "management", "management+ssl" then
           check_management(m)
         when "mqtt", "mqtt+ssl" then
-          check_mqtt(m)
+          # MQTT needs out-of-band configuration (RabbitMQ needs to
+          # know what vhost to use for MQTT connections), disable it
+          # for now. MK.
+          #
+          # check_mqtt(m)
+          {:proto => :mqtt}
         when "stomp" then
           check_stomp(m)
         end
