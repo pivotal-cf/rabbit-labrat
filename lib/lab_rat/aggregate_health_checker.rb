@@ -95,7 +95,7 @@ class LabRat
       begin
         with_timeout do
           u   = URI.parse(proto["uri"])
-          c   = MQTT::Client.connect(u.host)
+          c   = MQTT::Client.connect(:remote_host => u.host, :username => u.user, :password => u.password)
           msg = "mqtt #{SecureRandom.hex}"
           c.publish("mqtt-test", msg)
 
