@@ -123,7 +123,6 @@ class LabRat
     def check_stomp(proto)
       begin
         with_timeout do
-          raise RuntimeError, "shit"
           c   = Stomp::Client.new(proto["uri"])
           msg = "stomp #{SecureRandom.hex}"
           c.publish("stomp-test", msg)
