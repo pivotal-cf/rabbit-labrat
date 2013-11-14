@@ -18,7 +18,7 @@ gem "effin_utf8"
 gem "rake"
 
 group :development do
-  gem "cf", "~> 5.3.0"
+  gem "cf", "~> 5.4.3"
 end
 group :test do
   gem "rspec"
