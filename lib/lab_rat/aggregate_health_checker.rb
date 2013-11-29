@@ -5,7 +5,7 @@ require "timeout"
 
 class LabRat
   class AggregateHealthChecker
-    CONNECTION_TIMEOUT = 2
+    CONNECTION_TIMEOUT = 4
 
 
     def check(protos)
