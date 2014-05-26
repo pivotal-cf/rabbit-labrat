@@ -9,7 +9,7 @@ gem "erubis"
 gem "multi_json"
 gem "yajl-ruby"
 
-gem "bunny", "~> 1.0.0"
+gem "bunny", "~> 1.2.2"
 gem "mqtt",  "~> 0.1.0"
 gem "stomp", "~> 1.3.1"
 gem "rabbitmq_http_api_client", ">= 0.7.0"
