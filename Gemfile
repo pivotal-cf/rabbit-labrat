@@ -12,7 +12,7 @@ gem "yajl-ruby"
 gem "bunny", "~> 1.2.2"
 gem "mqtt",  "~> 0.1.0"
 gem "stomp", "~> 1.3.1"
-gem "rabbitmq_http_api_client", ">= 0.7.0"
+gem "rabbitmq_http_api_client", ">= 1.1.0"
 
 gem "effin_utf8"
 gem "rake"
