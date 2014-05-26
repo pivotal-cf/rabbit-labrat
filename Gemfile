@@ -19,5 +19,5 @@ gem "rake"
 
 group :test do
   gem "rspec"
-  gem "faraday"
+  gem "faraday", "~> 0.8.9"
 end
