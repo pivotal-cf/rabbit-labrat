@@ -23,4 +23,4 @@ It is not useful more than as an example.
 
 Released under the MIT license.
 
-(c) Michael S. Klishin, GoPivotal Inc.
+(c) 2013-2014, Michael S. Klishin, Pivotal Software.
