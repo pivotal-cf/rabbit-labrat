@@ -22,6 +22,7 @@ class LabRat < Sinatra::Base
   configure do
     set :server, :puma
     set :bind,   "0.0.0.0"
+    set :port,   ENV.fetch("PORT", 4567)
     set :views,  File.join(settings.root, 'views')
   end
 
