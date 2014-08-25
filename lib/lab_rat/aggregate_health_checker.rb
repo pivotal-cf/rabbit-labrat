@@ -2,6 +2,7 @@ require "bunny"
 require "rabbitmq/http/client"
 require "securerandom"
 require "timeout"
+require "cgi"
 
 class LabRat
   class AggregateHealthChecker
@@ -19,7 +20,6 @@ class LabRat
           check_management(m)
         when "mqtt", "mqtt+ssl" then
            check_mqtt(m)
-          {:proto => :mqtt}
         when "stomp", "stomp+ssl" then
           check_stomp(m)
         end
@@ -95,19 +95,20 @@ class LabRat
     def check_mqtt(proto)
       begin
         with_timeout do
-          u   = URI.parse(proto["uri"])
+          u   = URI.parse(CGI.unescape(proto["uri"]))
           c   = MQTT::Client.connect(:remote_host => u.host, :username => u.user, :password => u.password)
           msg = "mqtt #{SecureRandom.hex}"
           c.publish("mqtt-test", msg)
 
           {
             :proto      => :mqtt,
-            :uri        => proto["uri"],
+            :uri        => CGI.unescape(proto["uri"]),
             :connection => c,
             :payload    => msg
           }
         end
       rescue Exception => e
+        puts e.message
         {
           :proto     => :mqtt,
           :uri       => proto["uri"],
