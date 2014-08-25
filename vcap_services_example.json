@@ -30,8 +30,8 @@
             "vhost": "/"
           },
           "mqtt": {
-            "uri": "mqtt:\/\/guest:guest@127.0.0.1:1883",
-            "username": "guest",
+            "uri": "mqtt:\/\/%2F%3Aguest:guest@127.0.0.1:1883",
+            "username": "/:guest",
             "password": "guest",
             "port": 1883,
             "host": "127.0.0.1"
@@ -53,20 +53,20 @@
           }
         }
       }
-    },
-    {
-      "name": "rabbit2",
-      "label": "rabbitmq",
-      "provider": "megacorp",
-      "tags": [
-        "amqp",
-        "rabbitmq"
-      ],
-      "plan": "free",
-      "credentials": {
-        "uri": "amqps:\/\/guest:guest@127.0.0.1:5673\/labrat2",
-        "http_api_uri": "https:\/\/guest:guest@127.0.0.1:15673\/api"
-      }
     }
+    // , {
+    //   "name": "rabbit2",
+    //   "label": "rabbitmq",
+    //   "provider": "megacorp",
+    //   "tags": [
+    //     "amqp",
+    //     "rabbitmq"
+    //   ],
+    //   "plan": "free",
+    //   "credentials": {
+    //     "uri": "amqps:\/\/guest:guest@127.0.0.1:5673\/labrat2",
+    //     "http_api_uri": "https:\/\/guest:guest@127.0.0.1:15673\/api"
+    //   }
+    // }
   ]
 }
