@@ -5,72 +5,71 @@ require "timeout"
 require "cgi"
 
 class LabRat
-  class AggregateHealthChecker
-    CONNECTION_TIMEOUT = 4
+    class AggregateHealthChecker
+        CONNECTION_TIMEOUT = 4
+        N = 100
 
+        def check(protos)
+            protos.map do |m|
+            k = m[:proto] || m["proto"]
 
-    def check(protos)
-      protos.map do |m|
-        k = m[:proto] || m["proto"]
-
-        case k
-        when "amqp", "amqp+ssl" then
-          check_amqp(m)
-        when "management", "management+ssl" then
-          check_management(m)
-        when "mqtt", "mqtt+ssl" then
-           check_mqtt(m)
-        when "stomp", "stomp+ssl" then
-          check_stomp(m)
+            case k
+            when "amqp", "amqp+ssl" then
+              check_amqp(m)
+            when "management", "management+ssl" then
+              check_management(m)
+            when "mqtt", "mqtt+ssl" then
+              check_mqtt(m)
+            when "stomp", "stomp+ssl" then
+              check_stomp(m)
+            end
+          end
         end
-      end
-    end
 
+        def check_amqp(proto)
+            begin
+                conn = Bunny.new(proto["uri"],
+                :tls_cert            => "./tls/client_cert.pem",
+                :tls_key             => "./tls/client_key.pem",
+                :tls_ca_certificates => ["./tls/cacert.pem"])
+                conn.start
+                tls = !!conn.uses_tls?
 
-    def check_amqp(proto)
-      begin
-        with_timeout do
-          conn = Bunny.new(proto["uri"],
-            :tls_cert            => "./tls/client_cert.pem",
-            :tls_key             => "./tls/client_key.pem",
-            :tls_ca_certificates => ["./tls/cacert.pem"])
-          conn.start
+                ch   = conn.create_channel
+                q    = ch.queue("", :exclusive => true)
 
-          ch   = conn.create_channel
-          q    = ch.queue("", :exclusive => true)
+                q.publish(SecureRandom.hex(20))
+                _, _, payload = q.pop
+                conn.close
 
-          q.publish(SecureRandom.hex(20))
-          _, _, payload = q.pop
+            {
+              :proto             => :amqp,
+              :uri               => proto["uri"],
+              :connection        => conn,
+              :tls               => tls,
+              :queue             => q,
+              :consumed_message_payload  => payload
+            }
+          rescue Exception => e
+            {
+              :proto     => :amqp,
+              :uri       => proto["uri"],
+              :exception => e
+            }
+          end
+        end # check_amqp
 
-          {
-            :proto             => :amqp,
-            :uri               => proto["uri"],
-            :connection        => conn,
-            :tls               => !!conn.uses_tls?,
-            :queue             => q,
-            :consumed_message_payload  => payload
-          }
-        end
-      rescue Exception => e
-        {
-          :proto     => :amqp,
-          :uri       => proto["uri"],
-          :exception => e
-        }
-      end
-    end # check_amqp
-
-    def check_management(proto)
-      begin
-        with_timeout do
-          http_uri    = URI.parse(proto["uri"])
-          opts        = if http_uri.scheme == "https"
-                          # since this is an example,
-                          # it is reasonable for the client to not
-                          # authenticate to the service. MK.
-                          {:ssl => {:verify => false}}
+        def check_management(proto)
+            begin
+                with_timeout do
+                    http_uri    = URI.parse(proto["uri"])
+                    opts        = if http_uri.scheme == "https"
+                        # since this is an example,
+                        # it is reasonable for the client to not
+                        # authenticate to the service. MK.
+                        {:ssl => {:verify => false}}
                         else
-                          {}
+                            {}
                         end
           http_client = RabbitMQ::HTTP::Client.new(proto["uri"], opts)
           overview    = http_client.overview
@@ -95,15 +94,16 @@ class LabRat
     def check_mqtt(proto)
       begin
         with_timeout do
-          u   = URI.parse(CGI.unescape(proto["uri"]))
-          c   = MQTT::Client.connect(:remote_host => u.host, :username => u.user, :password => u.password)
+          c   = MQTT::Client.connect(:remote_host => proto["host"],
+            :username => proto["username"],
+            :password => proto["password"])
           msg = "mqtt #{SecureRandom.hex}"
-          c.publish("mqtt-test", msg)
+          N.times { c.publish("/pcf/mqtt-test", msg) }
+          c.disconnect
 
           {
             :proto      => :mqtt,
-            :uri        => CGI.unescape(proto["uri"]),
-            :connection => c,
+            :uri        => proto["uri"],
             :payload    => msg
           }
         end
@@ -119,18 +119,28 @@ class LabRat
 
     def check_stomp(proto)
       begin
-        with_timeout do
-          c   = Stomp::Client.new(proto["uri"])
-          msg = "stomp #{SecureRandom.hex}"
-          c.publish("stomp-test", msg)
+        c   = Stomp::Client.new({
+            :hosts                  => [
+              {:host     => proto["host"],
+               :port     => proto["port"],
+               :login    => proto["username"],
+               :passcode => proto["password"]}
+            ],
+            :connread_timeout       => 3,
+            :connect_timeout        => 3,
+            :max_reconnect_attempts => 0
+          })
+        t   = "/topic/stomp-test"
+        msg = "stomp #{SecureRandom.hex}"
 
-          {
-            :connection => c,
-            :proto      => :stomp,
-            :uri        => proto["uri"],
-            :payload    => msg
-          }
-        end
+        N.times { c.publish(t, msg) }
+        c.close
+
+        {
+          :proto      => :stomp,
+          :uri        => proto["uri"],
+          :payload    => msg
+        }
       rescue Exception => e
         {
           :proto     => :stomp,
@@ -144,7 +154,11 @@ class LabRat
 
     def with_timeout(&block)
       Timeout.timeout(CONNECTION_TIMEOUT) do
-        block.call
+        begin
+          block.call
+        rescue Exception => e
+          {:exception => e}
+        end
       end
     end
   end
