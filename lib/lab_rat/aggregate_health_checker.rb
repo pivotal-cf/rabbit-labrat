@@ -10,7 +10,7 @@ class LabRat
         N = 100
 
         def check(protos)
-            protos.map do |m|
+          protos.map do |m|
             k = m[:proto] || m["proto"]
 
             case k
@@ -20,10 +20,8 @@ class LabRat
               check_management(m)
             when "mqtt", "mqtt+ssl" then
               check_mqtt(m)
-            when "stomp", "stomp+ssl" then
-              check_stomp(m)
             end
-          end
+          end.compact
         end
 
         def check_amqp(proto)
