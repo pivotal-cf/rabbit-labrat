@@ -55,6 +55,10 @@ class LabRat < Sinatra::Base
         sort_by { |m| m[:proto].to_s }
     end
 
+    def amqp091_conn
+      conns.detect { |m| %w(amqp amqp+ssl).include?(m[:proto]) }
+    end
+
     def partial(template, locals = {})
       erb(template, :layout => false, :locals => locals)
     end
@@ -68,7 +72,7 @@ class LabRat < Sinatra::Base
     MultiJson.dump(ENV["VCAP_SERVICES"])
   end
 
-  get "/services/rabbitmq" do
+  get "/services/rabbitmq/protocols/all" do
     if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       hc      = AggregateHealthChecker.new
       results = hc.check(conns)
@@ -77,8 +81,26 @@ class LabRat < Sinatra::Base
         status 500
       end
 
-      erb :rabbitmq_service, :locals => {
+      erb :check_protocols_all, :locals => {
         :results => results
+      }
+    else
+      status 500
+      "VCAP_SERVICES is not set or blank"
+    end
+  end
+
+  get "/services/rabbitmq/protocols/amqp091" do
+    if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
+      hc     = AggregateHealthChecker.new
+      result = hc.check_amqp(amqp091_conn)
+
+      if result.empty? || !!result[:exception]
+        status 500
+      end
+
+      erb :check_protocol_amqp091, :locals => {
+        :result => result
       }
     else
       status 500
