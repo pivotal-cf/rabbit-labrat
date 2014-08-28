@@ -2,6 +2,7 @@ tmp/*
 *#
 *~
 vcap_services.json
+vcap_services_local.json
 bin/
 .bundle/*
 debug/*
