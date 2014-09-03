@@ -26,28 +26,29 @@ class LabRat
 
         def check_amqp(proto)
             begin
-                conn = Bunny.new(proto["uri"],
-                :tls_cert            => "./tls/client_cert.pem",
-                :tls_key             => "./tls/client_key.pem",
-                :tls_ca_certificates => ["./tls/cacert.pem"])
-                conn.start
-                tls = !!conn.uses_tls?
+              conn = Bunny.new(proto["uri"],
+              :tls_cert            => "./tls/client_cert.pem",
+              :tls_key             => "./tls/client_key.pem",
+              :tls_ca_certificates => ["./tls/cacert.pem"],
+              :verify_peer         => true)
+              conn.start
+              tls = !!conn.uses_tls?
 
-                ch   = conn.create_channel
-                q    = ch.queue("", :exclusive => true)
+              ch   = conn.create_channel
+              q    = ch.queue("", :exclusive => true)
 
-                q.publish(SecureRandom.hex(20))
-                _, _, payload = q.pop
-                conn.close
+              q.publish(SecureRandom.hex(20))
+              _, _, payload = q.pop
+              conn.close
 
-            {
-              :proto             => :amqp,
-              :uri               => proto["uri"],
-              :connection        => conn,
-              :tls               => tls,
-              :queue             => q,
-              :consumed_message_payload  => payload
-            }
+              {
+                :proto             => :amqp,
+                :uri               => proto["uri"],
+                :connection        => conn,
+                :tls               => tls,
+                :queue             => q,
+                :consumed_message_payload  => payload
+              }
           rescue Exception => e
             {
               :proto     => :amqp,
