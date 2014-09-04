@@ -10,45 +10,45 @@ class LabRat
         N = 100
 
         def check(protos)
-          protos.map do |m|
-            k = m[:proto] || m["proto"]
+            protos.map do |m|
+                k = m[:proto] || m["proto"]
 
-            case k
-            when "amqp", "amqp+ssl" then
-              check_amqp(m)
-            when "management", "management+ssl" then
-              check_management(m)
-            when "mqtt", "mqtt+ssl" then
-              check_mqtt(m)
-            end
-          end.compact
+                case k
+                when "amqp", "amqp+ssl" then
+                    check_amqp(m)
+                when "management", "management+ssl" then
+                    check_management(m)
+                when "mqtt", "mqtt+ssl" then
+                    check_mqtt(m)
+                end
+            end.compact
         end
 
         def check_amqp(proto)
             begin
-              conn = Bunny.new(proto["uri"],
-              :tls_cert            => "./tls/client_cert.pem",
-              :tls_key             => "./tls/client_key.pem",
-              :tls_ca_certificates => ["./tls/cacert.pem"],
-              :verify_peer         => true)
-              conn.start
-              tls = !!conn.uses_tls?
+                conn = Bunny.new(proto["uri"],
+                :tls_cert            => "./tls/client_cert.pem",
+                :tls_key             => "./tls/client_key.pem",
+                :tls_ca_certificates => ["./tls/cacert.pem"],
+                :verify_peer         => true)
+                conn.start
+                tls = !!conn.uses_tls?
 
-              ch   = conn.create_channel
-              q    = ch.queue("", :exclusive => true)
+                ch   = conn.create_channel
+                q    = ch.queue("", :exclusive => true)
 
-              q.publish(SecureRandom.hex(20))
-              _, _, payload = q.pop
-              conn.close
+                q.publish(SecureRandom.hex(20))
+                _, _, payload = q.pop
+                conn.close
 
-              {
-                :proto             => :amqp,
-                :uri               => proto["uri"],
-                :connection        => conn,
-                :tls               => tls,
-                :queue             => q,
-                :consumed_message_payload  => payload
-              }
+                {
+                  :proto             => :amqp,
+                  :uri               => proto["uri"],
+                  :connection        => conn,
+                  :tls               => tls,
+                  :queue             => q,
+                  :consumed_message_payload  => payload
+                }
           rescue Exception => e
             {
               :proto     => :amqp,
@@ -60,35 +60,36 @@ class LabRat
 
         def check_management(proto)
             begin
-                with_timeout do
-                    http_uri    = URI.parse(proto["uri"])
-                    opts        = if http_uri.scheme == "https"
-                        # since this is an example,
-                        # it is reasonable for the client to not
-                        # authenticate to the service. MK.
-                        {:ssl => {:verify => false}}
-                        else
-                            {}
-                        end
-          http_client = RabbitMQ::HTTP::Client.new(proto["uri"], opts)
-          overview    = http_client.overview
+              with_timeout do
+                http_uri    = URI.parse(proto["uri"])
+                opts        = if http_uri.scheme == "https"
+                                # since this is an example,
+                                # it is reasonable for the client to not
+                                # authenticate to the service. MK.
+                                {:ssl => {:verify => false}}
+                              else
+                                {}
+                              end
+                http_client = RabbitMQ::HTTP::Client.new(proto["uri"], opts)
+                overview    = http_client.overview
 
-          {
-            :proto                     => :management,
-            :management_plugin_version => overview.management_version,
-            :statistics_db_node        => overview.statistics_db_node,
-            :full_erlang_version       => overview.erlang_full_version,
-            :object_totals             => overview.object_totals.to_hash
-          }
+              {
+                :proto                     => :management,
+                :tls                       => (http_uri.scheme == "https"),
+                :management_plugin_version => overview.management_version,
+                :statistics_db_node        => overview.statistics_db_node,
+                :full_erlang_version       => overview.erlang_full_version,
+                :object_totals             => overview.object_totals.to_hash
+              }
+              end
+            rescue Exception => e
+              {
+                :proto     => :management,
+                :uri       => proto["uri"],
+                :exception => e
+              }
+            end
         end
-      rescue Exception => e
-        {
-          :proto     => :management,
-          :uri       => proto["uri"],
-          :exception => e
-        }
-      end
-    end
 
     def check_mqtt(proto)
       begin
