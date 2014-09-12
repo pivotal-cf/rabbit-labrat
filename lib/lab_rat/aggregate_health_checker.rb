@@ -27,9 +27,9 @@ class LabRat
         def check_amqp(proto)
             begin
                 conn = Bunny.new(proto["uri"],
-                :tls_cert            => "./tls/client_cert.pem",
+                :tls_cert            => "./tls/client_certificate.pem",
                 :tls_key             => "./tls/client_key.pem",
-                :tls_ca_certificates => ["./tls/cacert.pem"],
+                :tls_ca_certificates => ["./tls/ca_certificate.pem"],
                 :verify_peer         => true)
                 conn.start
                 tls = !!conn.uses_tls?
