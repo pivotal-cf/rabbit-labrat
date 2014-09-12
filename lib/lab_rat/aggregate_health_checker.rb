@@ -30,7 +30,7 @@ class LabRat
                 :tls_cert            => "./tls/client_certificate.pem",
                 :tls_key             => "./tls/client_key.pem",
                 :tls_ca_certificates => ["./tls/ca_certificate.pem"],
-                :verify_peer         => true)
+                :verify_peer         => false)
                 conn.start
                 tls = !!conn.uses_tls?
 
