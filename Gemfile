@@ -15,7 +15,10 @@ gem "stomp", "~> 1.3.1"
 gem "rabbitmq_http_api_client", ">= 1.1.0"
 
 gem "effin_utf8"
-gem "rake"
+
+group :development do
+  gem "rake"
+end
 
 group :test do
   gem "rspec"
