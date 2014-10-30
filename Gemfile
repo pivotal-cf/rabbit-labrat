@@ -16,10 +16,6 @@ gem "rabbitmq_http_api_client", ">= 1.1.0"
 
 gem "effin_utf8"
 
-group :development do
-  gem "rake"
-end
-
 group :test do
   gem "rspec"
   gem "faraday", "~> 0.8.9"
