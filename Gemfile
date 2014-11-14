@@ -18,5 +18,5 @@ gem "effin_utf8"
 
 group :test do
   gem "rspec"
-  gem "faraday", "~> 0.8.9"
+  gem "faraday", "~> 0.9.0"
 end
