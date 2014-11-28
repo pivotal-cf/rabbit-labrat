@@ -20,12 +20,10 @@ describe LabRat::AggregateHealthChecker do
       m = subject.check(credentials).first
 
       m[:uri].should == credentials.first["uri"]
-      m[:connection].should be_connected
+      m[:connection].should_not be_connected, "Health checker closes its own resources"
 
       m[:queue].should_not be_nil
       m[:consumed_message_payload].should_not be_nil
-
-      m[:connection].close
     end
   end
 

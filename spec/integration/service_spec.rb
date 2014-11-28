@@ -27,65 +27,11 @@ describe "LabRat HTTP API" do
     conn.get(path)
   end
 
-  describe "/services/rabbitmq" do
-    context "with valid credentials" do
-      let(:vcap_services) do
-        <<-JSON
-        {
-          "rabbitmq-1.0": [
-            {
-              "name": "rabbit1",
-              "label": "rabbitmq",
-              "provider": "megacorp",
-              "tags": ["amqp", "rabbitmq"],
-              "plan": "free",
-              "credentials": {
-                "uri":          "amqp://guest:guest@127.0.0.1/labrat",
-                "http_api_uri": "http://guest:guest@127.0.0.1:15672/api"
-              }
-            }
-          ]
-        }
-        JSON
-      end
-
-      it "responds with 200" do
-        res = get("services/rabbitmq")
-        res.status.should == 200
-      end
-    end
-
-    context "with invalid credentials" do
-      let(:vcap_services) do
-        <<-JSON
-        {
-          "rabbitmq-1.0": [
-            {
-              "name": "rabbit1",
-              "label": "rabbitmq",
-              "provider": "megacorp",
-              "tags": ["amqp", "rabbitmq"],
-              "plan": "free",
-              "credentials": {
-                "uri":          "amqp://guest_-s9d8:guest87832738@127.0.0.1/labrat",
-                "http_api_uri": "http://8as7djk2jkjl8#7727:8sds7d7a7@127.0.0.1:15672/api"
-              }
-            }
-          ]
-        }
-        JSON
-      end
-
-      it "responds with 500" do
-        res = get("services/rabbitmq")
-        res.status.should == 500
-      end
-    end
-  end
-
-
   describe "/services/rabbitmq.json" do
     context "with valid credentials" do
+      let(:admin_uri) { "http://guest:guest@127.0.0.1:15672/api" }
+      let(:rabbitmq_admin) { RabbitMQAdmin.new(admin_uri) }
+
       let(:vcap_services) do
         <<-JSON
         {
@@ -98,12 +44,20 @@ describe "LabRat HTTP API" do
               "plan": "free",
               "credentials": {
                 "uri":          "amqp://guest:guest@127.0.0.1/labrat",
-                "http_api_uri": "http://guest:guest@127.0.0.1:15672/api"
+                "http_api_uri": "#{admin_uri}"
               }
             }
           ]
         }
         JSON
+      end
+
+      before do
+        rabbitmq_admin.create_vhost_and_user
+      end
+
+      after do
+        rabbitmq_admin.delete_vhost
       end
 
       it "responds with 200" do

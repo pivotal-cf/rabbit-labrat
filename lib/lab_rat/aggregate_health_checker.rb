@@ -39,7 +39,7 @@ class LabRat
 
                 q.publish(SecureRandom.hex(20))
                 _, _, payload = q.pop
-                conn.close
+
 
                 {
                   :proto             => :amqp,
@@ -49,12 +49,14 @@ class LabRat
                   :queue             => q,
                   :consumed_message_payload  => payload
                 }
-          rescue Exception => e
+            rescue Exception => e
             {
               :proto     => :amqp,
               :uri       => proto["uri"],
               :exception => e
             }
+            ensure
+              conn.close
           end
         end # check_amqp
 

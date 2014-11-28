@@ -54,19 +54,5 @@
         }
       }
     }
-    // , {
-    //   "name": "rabbit2",
-    //   "label": "rabbitmq",
-    //   "provider": "megacorp",
-    //   "tags": [
-    //     "amqp",
-    //     "rabbitmq"
-    //   ],
-    //   "plan": "free",
-    //   "credentials": {
-    //     "uri": "amqps:\/\/guest:guest@127.0.0.1:5673\/labrat2",
-    //     "http_api_uri": "https:\/\/guest:guest@127.0.0.1:15673\/api"
-    //   }
-    // }
   ]
 }
