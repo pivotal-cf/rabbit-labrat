@@ -56,7 +56,7 @@ class LabRat
               :exception => e
             }
             ensure
-              conn.close
+              conn.close if conn.connected?
           end
         end # check_amqp
 
