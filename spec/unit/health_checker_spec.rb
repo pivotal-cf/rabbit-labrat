@@ -31,7 +31,7 @@ describe LabRat::AggregateHealthChecker do
   context "with invalid credentials" do
     let(:credentials) do
       [{
-          "uri"   => "amqp://guest:guest@127.0.87.9",
+          "uri"   => "amqp://guest:wrongpassword@127.0.87.9",
           :proto  => "amqp"
         },
         {
