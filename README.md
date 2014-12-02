@@ -21,6 +21,6 @@ It is not useful more than as an example.
 
 ## License
 
-Released under the MIT license.
+Released under the Apache 2.0 license
 
-(c) 2013-2014, Michael S. Klishin, Pivotal Software.
+(c) 2013-2014, Pivotal Software
