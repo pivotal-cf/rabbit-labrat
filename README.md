@@ -1,4 +1,4 @@
-# What is Lab Rat
+# What is Lab Rat [![Build Status](https://travis-ci.org/pivotal-cf/rabbit-labrat.svg?branch=master)](https://travis-ci.org/pivotal-cf/rabbit-labrat)
 
 This is an example Cloud Foundry app that used to inspect
 values of environment variables available (e.g. `VCAP_SERVICES`)
