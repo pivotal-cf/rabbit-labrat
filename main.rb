@@ -59,6 +59,10 @@ class LabRat < Sinatra::Base
       conns.detect { |m| %w(amqp amqp+ssl).include?(m[:proto]) }
     end
 
+    def stomp_conn
+      conns.detect { |m| %w(stomp stomp+ssl).include?(m[:proto]) }
+    end
+
     def mqtt_conn
       conns.detect { |m| %w(mqtt mqtt+ssl).include?(m[:proto]) }
     end
@@ -122,6 +126,24 @@ class LabRat < Sinatra::Base
       end
 
       erb :check_protocol_mqtt, :locals => {
+        :result => result
+      }
+    else
+      status 500
+      "VCAP_SERVICES is not set or blank"
+    end
+  end
+
+  get "/services/rabbitmq/protocols/stomp" do
+    if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
+      hc     = AggregateHealthChecker.new
+      result = hc.check_stomp(stomp_conn)
+
+      if result.empty? || !!result[:exception]
+        status 500
+      end
+
+      erb :check_protocol_stomp, :locals => {
         :result => result
       }
     else

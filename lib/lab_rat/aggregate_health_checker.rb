@@ -121,6 +121,7 @@ class LabRat
 
     def check_stomp(proto)
       begin
+        logger = Logger.new(STDOUT)
         c   = Stomp::Client.new({
             :hosts                  => [
               {:host     => proto["host"],
@@ -128,9 +129,14 @@ class LabRat
                :login    => proto["username"],
                :passcode => proto["password"]}
             ],
+            :connect_headers => {
+              :host => proto["vhost"],
+              "accept-version" => "1.1"
+            },
             :connread_timeout       => 3,
             :connect_timeout        => 3,
-            :max_reconnect_attempts => 0
+            :max_reconnect_attempts => 0,
+            :logger                 => logger
           })
         t   = "/topic/stomp-test"
         msg = "stomp #{SecureRandom.hex}"
