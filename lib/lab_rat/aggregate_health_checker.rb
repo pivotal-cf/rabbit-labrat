@@ -26,29 +26,34 @@ class LabRat
 
         def check_amqp(proto)
             begin
-                conn = Bunny.new(proto["uri"],
-                :tls_cert            => "./tls/client_certificate.pem",
-                :tls_key             => "./tls/client_key.pem",
-                :tls_ca_certificates => ["./tls/ca_certificate.pem"],
-                :verify_peer         => false)
-                conn.start
-                tls = !!conn.uses_tls?
+              tls_cert = File.expand_path("../../../tls/client_certificate.pem", __FILE__)
+              tls_key = File.expand_path("../../../tls/client_key.pem", __FILE__)
+              tls_ca_certificates = [File.expand_path("../../../tls/ca_certificate.pem", __FILE__)]
+              conn = Bunny.new(
+                proto["uri"],
+                :tls_cert            => tls_cert,
+                :tls_key             => tls_key,
+                :tls_ca_certificates => tls_ca_certificates,
+                :verify_peer         => false,
+              )
+              conn.start
+              tls = !!conn.uses_tls?
 
-                ch   = conn.create_channel
-                q    = ch.queue("", :exclusive => true)
+              ch   = conn.create_channel
+              q    = ch.queue("", :exclusive => true)
 
-                q.publish(SecureRandom.hex(20))
-                _, _, payload = q.pop
+              q.publish(SecureRandom.hex(20))
+              _, _, payload = q.pop
 
 
-                {
-                  :proto             => :amqp,
-                  :uri               => proto["uri"],
-                  :connection        => conn,
-                  :tls               => tls,
-                  :queue             => q,
-                  :consumed_message_payload  => payload
-                }
+              {
+                :proto             => :amqp,
+                :uri               => proto["uri"],
+                :connection        => conn,
+                :tls               => tls,
+                :queue             => q,
+                :consumed_message_payload  => payload
+              }
             rescue Exception => e
             {
               :proto     => :amqp,
@@ -56,7 +61,7 @@ class LabRat
               :exception => e
             }
             ensure
-              conn.close if conn.connected?
+              conn.close if !conn.nil? && conn.connected?
           end
         end # check_amqp
 
@@ -97,6 +102,7 @@ class LabRat
       begin
         with_timeout do
           c   = MQTT::Client.connect(:remote_host => proto["host"],
+            :port     => proto["port"],
             :username => proto["username"],
             :password => proto["password"])
           msg = "mqtt #{SecureRandom.hex}"
