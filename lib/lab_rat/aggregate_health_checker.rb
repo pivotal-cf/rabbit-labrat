@@ -102,10 +102,13 @@ class LabRat
       begin
         with_timeout do
           c   = MQTT::Client.connect(:remote_host => proto["host"],
-            :port     => proto["port"],
-            :username => proto["username"],
-            :password => proto["password"])
+            :port          => proto["port"],
+            :username      => proto["username"],
+            :password      => proto["password"],
+            :client_id     => "mqtt_test_client",
+            :clean_session => false)
           msg = "mqtt #{SecureRandom.hex}"
+          c.subscribe(["test_subscription", 1])
           N.times { c.publish("/pcf/mqtt-test", msg) }
           c.disconnect
 
