@@ -42,17 +42,14 @@ class LabRat < Sinatra::Base
     end
 
     def conns
-      xs = rabbitmq_services.
-        map { |h| h["credentials"] }.
-        map do |creds| creds["protocols"] || {
+      rabbitmq_services.map { |h| h["credentials"] }.map do |creds|
+        creds["protocols"] || {
           "amqp"       => {"uri" => creds["uri"]},
           "management" => {"uri" => creds["http_api_uri"]}
-        } end.reduce([]) do |acc, m|
-          acc + m.reduce([]) { |acc2, (k, v)| acc2 << (v.merge(:proto => k))}
-        end
-
-      xs.compact.
-        sort_by { |m| m[:proto].to_s }
+        }
+      end.flat_map do |m|
+        m.map { |(k, v)| v.merge(:proto => k)}
+      end.compact
     end
 
     def amqp091_conn

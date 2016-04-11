@@ -1,7 +1,7 @@
 require "spec_helper"
 require "main"
 
-describe "LabRat HTTP API" do
+RSpec.describe "LabRat HTTP API" do
   before :all do
     @t = Thread.new do
       LabRat.run!
@@ -62,7 +62,7 @@ describe "LabRat HTTP API" do
 
       it "responds with 200" do
         res = get("services/rabbitmq.json")
-        res.status.should == 200
+        expect(res.status).to eq 200
       end
     end
 
@@ -89,7 +89,7 @@ describe "LabRat HTTP API" do
 
       it "responds with 500" do
         res = get("services/rabbitmq.json")
-        res.status.should == 500
+        expect(res.status).to eq 500
       end
     end
   end
