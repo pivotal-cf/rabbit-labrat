@@ -5,7 +5,6 @@ gem "puma"
 gem "sinatra-contrib"
 gem "erubis"
 gem "multi_json"
-gem "yajl-ruby"
 
 gem "bunny", "~> 1.6.3"
 gem "mqtt",  "~> 0.1.0"
