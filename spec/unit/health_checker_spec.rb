@@ -7,6 +7,7 @@ RSpec.describe LabRat::AggregateHealthChecker do
     let(:credentials) do
       [{
         "uri"   => "amqp://guest:guest@127.0.0.1",
+        "uris"  => ["amqp://guest:guest@127.0.0.1"],
         :proto  => "amqp"
       },
       {
@@ -31,6 +32,7 @@ RSpec.describe LabRat::AggregateHealthChecker do
     let(:credentials) do
       [{
         "uri"   => "amqp://guest:wrongpassword@127.0.0.1",
+        "uris"  => ["amqp://guest:wrongpassword@127.0.0.1"],
         :proto  => "amqp"
       },
       {

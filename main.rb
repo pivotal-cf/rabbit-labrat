@@ -98,14 +98,14 @@ class LabRat < Sinatra::Base
   get "/services/rabbitmq/protocols/amqp091" do
     if ENV["VCAP_SERVICES"] && !ENV["VCAP_SERVICES"].empty?
       hc     = AggregateHealthChecker.new
-      result = hc.check_amqp(amqp091_conn)
+      results = hc.check_amqp(amqp091_conn)
 
-      if result.empty? || !!result[:exception]
+      if results.empty? || results.any? { |r| !!r[:exception] }
         status 500
       end
 
       erb :check_protocol_amqp091, :locals => {
-        :result => result
+        :results => results
       }
     else
       status 500

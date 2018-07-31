@@ -15,7 +15,7 @@ class LabRat
 
         case k
         when "amqp", "amqp+ssl" then
-          check_amqp(m)
+          check_amqp(m)[0]
         when "management", "management+ssl" then
           check_management(m)
         when "mqtt", "mqtt+ssl" then
@@ -24,13 +24,13 @@ class LabRat
       end.compact
     end
 
-    def check_amqp(proto)
+    def try_connect_to(uri)
+      tls_cert = File.expand_path("../../../tls/client_certificate.pem", __FILE__)
+      tls_key = File.expand_path("../../../tls/client_key.pem", __FILE__)
+      tls_ca_certificates = [File.expand_path("../../../tls/ca_certificate.pem", __FILE__)]
       begin
-        tls_cert = File.expand_path("../../../tls/client_certificate.pem", __FILE__)
-        tls_key = File.expand_path("../../../tls/client_key.pem", __FILE__)
-        tls_ca_certificates = [File.expand_path("../../../tls/ca_certificate.pem", __FILE__)]
         conn = Bunny.new(
-          proto["uri"],
+          uri,
           :tls_cert            => tls_cert,
           :tls_key             => tls_key,
           :tls_ca_certificates => tls_ca_certificates,
@@ -38,7 +38,6 @@ class LabRat
         )
         conn.start
         tls = !!conn.uses_tls?
-
         ch   = conn.create_channel
         q    = ch.queue("", :exclusive => true)
 
@@ -48,7 +47,7 @@ class LabRat
 
         {
           :proto             => :amqp,
-          :uri               => proto["uri"],
+          :uri               => uri,
           :connection        => conn,
           :tls               => tls,
           :queue             => q,
@@ -57,13 +56,19 @@ class LabRat
       rescue Exception => e
         {
           :proto     => :amqp,
-          :uri       => proto["uri"],
+          :uri       => uri,
           :exception => e
         }
       ensure
         conn.close if !conn.nil? && conn.connected?
       end
-    end # check_amqp
+    end
+
+    def check_amqp(proto)
+      proto['uris'].map do |uri|
+        try_connect_to(uri)
+      end
+    end
 
     def check_management(proto)
       begin

@@ -7,23 +7,25 @@
   </head>
 
   <body>
-    <article>
-      <% if e = result[:exception] %>
-      <div class="error">
-        <h3>Connection <%= result[:uri] %></h3>
-        raised an exception:
-        <p>
-          <%= e.message %>
-          <% e.backtrace[0, 12].each do |line| %>
-            <%= line %><br/>
-          <% end %>
-        </p>
-      </div>
-      <% else %>
-        <div class="success">
-          <%= partial :amqp, :result => result %>
+    <% results.each do |result| %>
+      <article>
+        <% if e = result[:exception] %>
+        <div class="error">
+          <h3>Connection <%= result[:uri] %></h3>
+          raised an exception:
+          <p>
+            <%= e.message %>
+            <% e.backtrace[0, 12].each do |line| %>
+              <%= line %><br/>
+            <% end %>
+          </p>
         </div>
-      <% end %>
-    </article>
+        <% else %>
+          <div class="success">
+            <%= partial :amqp, :result => result %>
+          </div>
+        <% end %>
+      </article>
+    <% end %>
   </body>
 </html>
