@@ -44,6 +44,7 @@ RSpec.describe "LabRat HTTP API" do
               "plan": "free",
               "credentials": {
                 "uri":          "amqp://guest:guest@127.0.0.1/labrat",
+                "uris":         ["amqp://guest:guest@127.0.0.1/labrat"],
                 "http_api_uri": "#{admin_uri}"
               }
             }

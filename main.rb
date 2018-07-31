@@ -44,7 +44,7 @@ class LabRat < Sinatra::Base
     def conns
       rabbitmq_services.map { |h| h["credentials"] }.map do |creds|
         creds["protocols"] || {
-          "amqp"       => {"uri" => creds["uri"]},
+          "amqp"       => {"uri" => creds["uri"], "uris" => creds["uris"]},
           "management" => {"uri" => creds["http_api_uri"]}
         }
       end.flat_map do |m|
