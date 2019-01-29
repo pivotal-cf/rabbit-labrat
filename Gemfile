@@ -6,7 +6,7 @@ gem "sinatra-contrib"
 gem "erubis"
 gem "multi_json"
 
-gem "bunny", "~> 1.6.3"
+gem "bunny", "~> 2.13.0"
 gem "mqtt",  "~> 0.1.0"
 gem "stomp", "~> 1.3.1"
 gem "rabbitmq_http_api_client", ">= 1.3.0"
