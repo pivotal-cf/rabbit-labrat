@@ -111,7 +111,9 @@ class LabRat
                                      :username      => proto["username"],
                                      :password      => proto["password"],
                                      :client_id     => "mqtt_test_client",
-                                     :clean_session => false)
+                                     :clean_session => false,
+                                     :ssl => (proto["uri"].start_with?("mqtt+ssl") ) )
+
           msg = "mqtt #{SecureRandom.hex}"
           c.subscribe(["test_subscription", 1])
           N.times { c.publish("/pcf/mqtt-test", msg) }
@@ -141,7 +143,8 @@ class LabRat
             {:host     => proto["host"],
              :port     => proto["port"],
              :login    => proto["username"],
-             :passcode => proto["password"]}
+             :passcode => proto["password"],
+             :ssl => (proto["uri"].start_with?("stomp+ssl") ) }
           ],
           :connect_headers => {
             :host => proto["vhost"],
