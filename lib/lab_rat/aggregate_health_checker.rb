@@ -20,6 +20,8 @@ class LabRat
           check_management(m)
         when "mqtt", "mqtt+ssl" then
           check_mqtt(m)
+        when "stomp", "stomp+ssl" then
+          check_stomp(m)
         end
       end.compact
     end
