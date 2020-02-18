@@ -2,3 +2,5 @@ applications:
 - name: lab-rat
   command: puma
   path: .
+  buildpacks:
+  - ruby_buildpack
