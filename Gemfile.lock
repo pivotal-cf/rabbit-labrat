@@ -91,4 +91,4 @@ DEPENDENCIES
   stomp (~> 1.4.8)
 
 BUNDLED WITH
-   1.17.2
+   2.1.4
