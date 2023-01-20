@@ -1,3 +1,4 @@
+ruby "~> 2.7.0"
 source "https://rubygems.org"
 
 gem "sinatra"
@@ -15,6 +16,6 @@ gem "effin_utf8"
 
 group :test do
   gem "rspec"
-  gem "faraday"  
+  gem "faraday"
   gem "rubocop"
 end
