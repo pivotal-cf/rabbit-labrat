@@ -93,3 +93,9 @@ DEPENDENCIES
   sinatra
   sinatra-contrib
   stomp (~> 1.4.9)
+
+RUBY VERSION
+   ruby 2.7.7p221
+
+BUNDLED WITH
+   2.3.26
