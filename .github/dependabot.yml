@@ -2,6 +2,6 @@ version: 2
 updates:
 - package-ecosystem: "bundler"
   directory: "/"
-  branch: "master"
+  target-branch: "master"
   schedule:
     interval: "daily"
