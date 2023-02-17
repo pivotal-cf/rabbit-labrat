@@ -38,7 +38,7 @@ GEM
       faraday (~> 1.0)
     hashie (4.1.0)
     json (2.6.3)
-    mqtt (0.5.0)
+    mqtt (0.6.0)
     multi_json (1.15.0)
     multipart-post (2.3.0)
     mustermann (3.0.0)
@@ -117,7 +117,7 @@ DEPENDENCIES
   effin_utf8
   erubis
   faraday
-  mqtt (~> 0.5.0)
+  mqtt (~> 0.6.0)
   multi_json
   puma
   rabbitmq_http_api_client (>= 1.13.0)
