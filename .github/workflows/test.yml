@@ -1,0 +1,16 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      rabbitmq:
+        image: rabbitmq
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+        bundler-cache: true
+    - run: bundle exec rspec
