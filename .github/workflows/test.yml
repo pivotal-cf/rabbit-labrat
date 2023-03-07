@@ -6,6 +6,8 @@ jobs:
     services:
       rabbitmq:
         image: rabbitmq:management
+        ports:
+        - 15672:15672
     steps:
     - uses: actions/checkout@v3
     - name: Set up Ruby
