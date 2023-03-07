@@ -5,8 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       rabbitmq:
-        image: rabbitmq
-        tags: management
+        image: rabbitmq:management
     steps:
     - uses: actions/checkout@v3
     - name: Set up Ruby
