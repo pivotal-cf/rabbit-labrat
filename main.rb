@@ -8,7 +8,7 @@ require "stomp"
 $LOAD_PATH << "./lib"
 
 # For development
-if File.exists?("vcap_services.json") && File.readable?("vcap_services.json")
+if File.exist?("vcap_services.json") && File.readable?("vcap_services.json")
   puts "WARNING: using VCAP_SERVICES from vcap_services.json!"
   ENV["VCAP_SERVICES"] = MultiJson.dump(MultiJson.load(File.read("vcap_services.json")))
 end
