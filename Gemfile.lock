@@ -56,7 +56,7 @@ GEM
       faraday_middleware (~> 1.2)
       hashie (~> 4.1)
       multi_json (~> 1.15)
-    rack (2.2.6.3)
+    rack (2.2.6.4)
     rack-protection (3.0.5)
       rack
     rainbow (3.1.1)
