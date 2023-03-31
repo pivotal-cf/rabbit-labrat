@@ -48,7 +48,7 @@ GEM
     parser (3.2.1.1)
       ast (~> 2.4.1)
     public_suffix (5.0.1)
-    puma (6.2.0)
+    puma (6.2.1)
       nio4r (~> 2.0)
     rabbitmq_http_api_client (2.2.0)
       addressable (~> 2.7)
