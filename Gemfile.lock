@@ -57,7 +57,7 @@ GEM
       hashie (~> 4.1)
       multi_json (~> 1.15)
     rack (2.2.6.4)
-    rack-protection (3.0.5)
+    rack-protection (3.0.6)
       rack
     rainbow (3.1.1)
     rbtree (0.4.6)
@@ -91,22 +91,22 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     set (1.0.3)
-    sinatra (3.0.5)
+    sinatra (3.0.6)
       mustermann (~> 3.0)
       rack (~> 2.2, >= 2.2.4)
-      rack-protection (= 3.0.5)
+      rack-protection (= 3.0.6)
       tilt (~> 2.0)
-    sinatra-contrib (3.0.5)
+    sinatra-contrib (3.0.6)
       multi_json
       mustermann (~> 3.0)
-      rack-protection (= 3.0.5)
-      sinatra (= 3.0.5)
+      rack-protection (= 3.0.6)
+      sinatra (= 3.0.6)
       tilt (~> 2.0)
     sorted_set (1.0.3)
       rbtree
       set (~> 1.0)
     stomp (1.4.10)
-    tilt (2.0.11)
+    tilt (2.1.0)
     unicode-display_width (2.4.2)
 
 PLATFORMS
