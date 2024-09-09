@@ -50,6 +50,9 @@ GEM
       rack (>= 3.0.0, < 4)
     rack-session (2.0.0)
       rack (>= 3.0.0)
+    rackup (2.1.0)
+      rack (>= 3)
+      webrick (~> 1.8)
     rainbow (3.1.1)
     rbtree (0.4.6)
     regexp_parser (2.9.2)
@@ -100,6 +103,7 @@ GEM
     tilt (2.4.0)
     unicode-display_width (2.5.0)
     uri (0.13.1)
+    webrick (1.8.1)
 
 PLATFORMS
   ruby
@@ -113,6 +117,7 @@ DEPENDENCIES
   multi_json
   puma
   rabbitmq_http_api_client (>= 1.13.0)
+  rackup (~> 2.1)
   rspec
   rubocop
   sinatra

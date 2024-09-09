@@ -19,3 +19,5 @@ group :test do
   gem "faraday"
   gem "rubocop"
 end
+
+gem "rackup", "~> 2.1"
