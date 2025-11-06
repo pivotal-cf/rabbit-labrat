@@ -8,7 +8,7 @@ gem "sinatra"
 gem "sinatra-contrib"
 
 gem "bunny", "~> 2.22.0"
-gem "mqtt",  "~> 0.6.0"
+gem "mqtt",  "~> 0.7.0"
 gem "rabbitmq_http_api_client", ">= 1.13.0"
 gem "stomp", "~> 1.4.10"
 gem "uri",   "~> 0.13.2"
