@@ -24,7 +24,8 @@ GEM
     json (2.7.2)
     language_server-protocol (3.17.0.3)
     logger (1.6.1)
-    mqtt (0.6.0)
+    mqtt (0.7.0)
+      logger
     multi_json (1.15.0)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
@@ -116,7 +117,7 @@ DEPENDENCIES
   effin_utf8
   erubis
   faraday
-  mqtt (~> 0.6.0)
+  mqtt (~> 0.7.0)
   multi_json
   puma
   rabbitmq_http_api_client (>= 1.13.0)
